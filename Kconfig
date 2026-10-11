@@ -1,0 +1,32 @@
+# Read by ESP-IDF as a component Kconfig, and by both forges' `make menu`
+# (scripts/menu.py) for the EXPANDER_<CHIP> prompts. stm-forge has no Kconfig
+# build step: its build only sees the defconfig lines, as
+# -DCONFIG_EXPANDER_<CHIP>=1 or 0. Every chip is off unless set.
+menuconfig EXPANDER
+    bool "GPIO expander subsystem"
+    default y
+    help
+        The expander core: struct expander_dev, expander_set_mode(),
+        expander_write() and expander_read() by pin or by port, interrupts
+        and the expander_* log helpers. Pick the chip drivers you need
+        below; none is built by default, so a chip missing from sdkconfig is
+        off.
+
+if EXPANDER
+
+    config EXPANDER_MCP23
+        bool "Microchip MCP23017 (I2C) / MCP23S17 (SPI), 16 pins"
+        default n
+        help
+            Build the MCP23X17 driver: mcp23_init() for the I2C part,
+            mcp23s17_init() for the SPI part, and the mcp23_* calls both
+            share.
+
+    config EXPANDER_DEBUG
+        bool "expander_dbg() lines"
+        default n
+        help
+            STM32 HAL only: compile expander_dbg() lines in. On ESP-IDF
+            expander_dbg() is ESP_LOGD and the log level decides.
+
+endif # EXPANDER
