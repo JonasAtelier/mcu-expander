@@ -27,7 +27,8 @@ the ESP-IDF component directory `expander` as well.
 > **Hardware unverified.** Host tests use simulated chips and platform stubs.
 > Nothing here has run on a physical chip.
 
-[Supported hardware](#supported-hardware) · [Install](#install) ·
+[Supported hardware](#supported-hardware) · [Drivers](#drivers) ·
+[Install](#install) ·
 [Quick start](#quick-start) · [Examples](#examples) ·
 [Documentation](#documentation) · [Tests](#tests)
 
@@ -35,11 +36,36 @@ the ESP-IDF component directory `expander` as well.
 
 | Chip | Interface | Notes |
 |---|---|---|
-| **MCP23017** | I2C, 0x20–0x27 | 16 pins, 100 kΩ pull-ups, INTA/INTB; **GPA7 and GPB7 are output only** (data sheet Rev D and later) |
-| **MCP23S17** | SPI mode 0, up to 10 MHz, A2..A0 shared chip select | the same 16 pins and registers, no output-only pins |
+| **MCP23017** | I2C | Microchip 16-pin I/O expander |
+| **MCP23S17** | SPI | Microchip 16-pin I/O expander |
 
 Both are one Kconfig option, `EXPANDER_MCP23`. Wiring is in the
 [wiring guide](docs/hardware.md).
+
+## Drivers
+
+<details><summary><b>MCP23017</b> — I2C</summary>
+
+16 pins, 100 kΩ pull-ups, INTA/INTB; **GPA7 and GPB7 are output only** (data
+sheet Rev D and later).
+
+- Interface: I2C, 0x20–0x27
+- Examples: ESP-IDF [mcp23017](examples/esp/mcp23017/) (esp-mcp23-expander's)
+  · STM32 HAL [mcp23017](examples/stm/mcp23017/main.c)
+- Chip reference: [MCP23017 / MCP23S17](docs/chips.md#mcp23017--mcp23s17)
+
+</details>
+
+<details><summary><b>MCP23S17</b> — SPI</summary>
+
+The MCP23017's 16 pins and registers, without its output-only pins.
+
+- Interface: SPI mode 0, up to 10 MHz, A2..A0 shared chip select
+- Examples: ESP-IDF [mcp23s17](examples/esp/mcp23s17/) · STM32 HAL
+  [mcp23s17](examples/stm/mcp23s17/main.c)
+- Chip reference: [MCP23017 / MCP23S17](docs/chips.md#mcp23017--mcp23s17)
+
+</details>
 
 ## Install
 
@@ -120,10 +146,7 @@ pressed = !pressed;                             /* buttons pull to ground */
 
 ## Examples
 
-| Chip | ESP-IDF | STM32 HAL |
-|---|---|---|
-| MCP23017 | [mcp23017](examples/esp/mcp23017/) (esp-mcp23-expander's) | [mcp23017](examples/stm/mcp23017/main.c) |
-| MCP23S17 | [mcp23s17](examples/esp/mcp23s17/) | [mcp23s17](examples/stm/mcp23s17/main.c) |
+Each driver's examples are listed under [Drivers](#drivers).
 
 ESP-IDF examples locate this library through `EXTRA_COMPONENT_DIRS`, which
 assumes the repository is checked out as `expander`. With ESP-IDF activated:
