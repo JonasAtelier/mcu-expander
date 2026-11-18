@@ -11,12 +11,12 @@
 
 /*
  * The core is always built; each chip driver only under its own option. With
- * the library on and no chip picked, say so -- stm-forge compiles this file
- * only when PKG_expander = y, so this is the CMakeLists' "EXPANDER on, no
- * chip" warning on the ESP-IDF side.
+ * the library built and no chip picked, say so: this file is compiled only
+ * when the library is, so this is the CMakeLists' "no chip" warning for every
+ * build that never reads that file (stm-forge, a hand-made project).
  */
 #if !(CONFIG_EXPANDER_MCP23)
-#warning "expander: no chip driver is selected; set EXPANDER_<CHIP> = y under PKG_expander = y (or -DCONFIG_EXPANDER_<CHIP>=1)"
+#warning "expander: no chip driver is selected; define CONFIG_EXPANDER_<CHIP>=1 (stm-forge: EXPANDER_<CHIP> = y)"
 #endif
 
 #if defined(HAL_I2C_MODULE_ENABLED) || defined(HAL_SPI_MODULE_ENABLED) || \

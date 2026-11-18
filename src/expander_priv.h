@@ -168,6 +168,17 @@ static inline esp_err_t expander_esp_err(int err)
 }
 
 #else /* STM32 HAL */
+/*
+ * Undefined, the include below fails with only
+ * `#include expects "FILENAME" or <FILENAME>`. Every library source that
+ * needs the HAL includes this header before any chip header, so one check
+ * here names the cause on every build route. The HAL module check sits in
+ * its #else: without the family header no module looks enabled, and it
+ * would blame the modules instead.
+ */
+#ifndef CMSIS_device_header
+#error "expander: CMSIS_device_header is not defined; define it as the STM32 family header, \"stm32f4xx.h\", \"stm32f7xx.h\" or \"stm32g0xx.h\" (CMake: set(MCU_DEVICE_HEADER stm32f4xx.h))"
+#else
 #include CMSIS_device_header
 
 /* The MCP23017 is on I2C and the MCP23S17 on SPI; either module will do,
@@ -176,6 +187,7 @@ static inline esp_err_t expander_esp_err(int err)
     CONFIG_EXPANDER_MCP23
 #error "the MCP23 driver needs the HAL I2C module (MCP23017) or SPI module (MCP23S17): #define HAL_I2C_MODULE_ENABLED or HAL_SPI_MODULE_ENABLED in the app's stm32<family>xx_hal_conf.h, with its stm32<family>xx_hal_<i2c|spi>.c in the build"
 #endif
+#endif /* CMSIS_device_header */
 
 #ifdef HAL_I2C_MODULE_ENABLED
 typedef I2C_HandleTypeDef *expander_i2c_bus;
